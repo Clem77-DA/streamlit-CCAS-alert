@@ -3,48 +3,46 @@ import requests
 import datetime
 from streamlit_autorefresh import st_autorefresh
 
-# 🌍 URL cible
-url = "https://portail-culture-et-loisirs.ccas.fr/10501-football#/lieu-parc_des_princes"
+# 🧠 Initialisation des états
+if 'running' not in st.session_state:
+    st.session_state.running = False
+if 'count' not in st.session_state:
+    st.session_state.count = 0
 
-st.title("🕵️ Détecteur de mot-clé CCAS - PSG")
+# 🧾 Titre de l'application
+st.title("🕵️ Détecteur de mot-clé CCAS")
+
+# 🌍 Entrée dynamique de l'URL
+url = st.text_input("🌐 URL de la page à surveiller :", value="https://portail-culture-et-loisirs.ccas.fr/10501-football#/lieu-parc_des_princes")
+
+# 🔑 Mot-clé à rechercher
 mot_clef = st.text_input("🔑 Mot-clé à rechercher :", value="aston")
 
 # 🔘 Boutons de contrôle
 col1, col2 = st.columns(2)
 with col1:
-    start = st.button("🟢 Démarrer la recherche automatique")
+    if st.button("🟢 Démarrer la recherche automatique"):
+        st.session_state.running = True
 with col2:
-    stop = st.button("🔴 Arrêter la recherche")
+    if st.button("🔴 Arrêter la recherche"):
+        st.session_state.running = False
 
-# 🧠 Mémoriser l'état (marche ou arrêt)
-if 'running' not in st.session_state:
-    st.session_state.running = False
-if start:
-    st.session_state.running = True
-if stop:
-    st.session_state.running = False
-
-# 🕒 Heure de vérification
+# 🕒 Afficher l'heure actuelle
 st.caption(f"⏱️ Heure actuelle : {datetime.datetime.now().strftime('%H:%M:%S')}")
 
-# 🔄 Affichage du compteur de rafraîchissements
-if 'count' not in st.session_state:
-    st.session_state.count = 0
-
-# 🔁 Rafraîchissement toutes les 60 sec si activé
+# 🔁 Si la recherche automatique est activée
 if st.session_state.running:
     st_autorefresh(interval=60000, key="refresh")
     st.session_state.count += 1
-    st.success(f"🔄 Recherche en cours... ({st.session_state.count} vérifications)")
+    st.success(f"🔄 Recherche automatique en cours... ({st.session_state.count} vérifications)")
 else:
     st.warning("⏸️ Recherche automatique arrêtée")
 
-# 🔍 Recherche du mot-clé
-if mot_clef:
+# 🔍 Recherche du mot-clé dans la page
+if mot_clef and url:
     headers = {
         "User-Agent": "Mozilla/5.0"
     }
-
     try:
         res = requests.get(url, headers=headers, timeout=10)
         if res.status_code == 200:
