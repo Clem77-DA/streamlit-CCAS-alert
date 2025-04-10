@@ -3,22 +3,21 @@ import requests
 import datetime
 from streamlit_autorefresh import st_autorefresh
 
-# 🧠 Initialisation des états
+# Initialisation de l'état
 if 'running' not in st.session_state:
     st.session_state.running = False
 if 'count' not in st.session_state:
     st.session_state.count = 0
 
-# 🧾 Titre de l'application
-st.title("🕵️ Détecteur de mot-clé CCAS")
+st.title("🕵️ Détecteur de mot-clé CCAS - PSG")
 
-# 🌍 Entrée dynamique de l'URL
+# ✅ Champ pour modifier l’URL
 url = st.text_input("🌐 URL de la page à surveiller :", value="https://portail-culture-et-loisirs.ccas.fr/10501-football#/lieu-parc_des_princes")
 
-# 🔑 Mot-clé à rechercher
+# ✅ Champ pour le mot-clé
 mot_clef = st.text_input("🔑 Mot-clé à rechercher :", value="aston")
 
-# 🔘 Boutons de contrôle
+# ✅ Boutons de contrôle
 col1, col2 = st.columns(2)
 with col1:
     if st.button("🟢 Démarrer la recherche automatique"):
@@ -27,10 +26,10 @@ with col2:
     if st.button("🔴 Arrêter la recherche"):
         st.session_state.running = False
 
-# 🕒 Afficher l'heure actuelle
+# ✅ Heure actuelle
 st.caption(f"⏱️ Heure actuelle : {datetime.datetime.now().strftime('%H:%M:%S')}")
 
-# 🔁 Si la recherche automatique est activée
+# ✅ Recherche auto avec compteur
 if st.session_state.running:
     st_autorefresh(interval=60000, key="refresh")
     st.session_state.count += 1
@@ -38,11 +37,9 @@ if st.session_state.running:
 else:
     st.warning("⏸️ Recherche automatique arrêtée")
 
-# 🔍 Recherche du mot-clé dans la page
+# ✅ Vérification du mot-clé dans la page
 if mot_clef and url:
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
+    headers = {"User-Agent": "Mozilla/5.0"}
     try:
         res = requests.get(url, headers=headers, timeout=10)
         if res.status_code == 200:
