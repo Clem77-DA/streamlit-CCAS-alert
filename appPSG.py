@@ -6,7 +6,7 @@ from streamlit_autorefresh import st_autorefresh
 # 🌍 URL cible
 url = "https://portail-culture-et-loisirs.ccas.fr/10501-football#/lieu-parc_des_princes"
 
-st.title("🕵️ Détecteur de mot-clé CCAS)
+st.title("🕵️ Détecteur de mot-clé CCAS - PSG")
 mot_clef = st.text_input("🔑 Mot-clé à rechercher :", value="aston")
 
 # 🔘 Boutons de contrôle
